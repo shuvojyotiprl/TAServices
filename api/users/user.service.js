@@ -3,21 +3,25 @@ const pool = require("../../config/database");
 module.exports = {
   create: (data, callBack) => {
     pool.query(
-      `insert into registration(firstName, lastName, gender, email, password, number) 
-                values(?,?,?,?,?,?)`,
+      `insert into registration(firstName, lastName, gender, email, password, number, role) 
+                values(?,?,?,?,?,?,?)`,
       [
         data.first_name,
         data.last_name,
         data.gender,
         data.email,
         data.password,
-        data.number
+        data.number,
+        'USER'
       ],
       (error, results, fields) => {
         if (error) {
           callBack(error);
         }
-        return callBack(null, results);
+        else {
+          return callBack(null, results);
+        }
+       
       }
     );
   },
@@ -86,6 +90,40 @@ module.exports = {
           callBack(error);
         }
         return callBack(null, results[0]);
+      }
+    );
+  },
+  updateTokenInDb: (data,jsontoken,callBack) => {
+    pool.query(
+      `update registration set token = ? where id = ?`,
+      [
+        jsontoken,
+        data.id
+      ],
+      (error, results, fields) => {
+        if (error) {
+          callBack(error);
+        }
+        //console.log(results)
+        return callBack(null, results);
+      }
+    );
+  },
+
+
+  findTokenInDb: (data,jsontoken,callBack) => {
+    pool.query(
+      `select token from registration where token = ? and id = ?`,
+      [
+        jsontoken,
+        data.id
+      ],
+      (error, results, fields) => {
+        if (error) {
+          callBack(error);
+        }
+        //console.log(results)
+        return callBack(null, results);
       }
     );
   }

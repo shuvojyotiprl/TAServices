@@ -6,13 +6,21 @@ const {
   getUserByUserId,
   getUsers,
   updateUsers,
-  deleteUser
+  deleteUser,
+  getMyDetails,
+  logout
 } = require("./user.controller");
-router.get("/", checkToken, getUsers);
-router.post("/", checkToken, createUser);
-router.get("/:id", checkToken, getUserByUserId);
+
+
+router.get("/all", checkToken, getUsers);  //admin restricted
+router.post("/", createUser);
+router.get("/id/:id", checkToken, getUserByUserId);  //admin restricted
 router.post("/login", login);
 router.patch("/", checkToken, updateUsers);
 router.delete("/", checkToken, deleteUser);
+router.get("/", checkToken, getMyDetails); 
+router.post("/logout",checkToken,logout)
+
+
 
 module.exports = router;

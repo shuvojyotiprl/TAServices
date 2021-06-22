@@ -4,10 +4,14 @@ const {
   getUserByUserId,
   getUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  updateTokenInDb
 } = require("./user.service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+
+const jwt = require("jsonwebtoken");
+
 
 module.exports = {
   createUser: (req, res) => {
@@ -16,16 +20,20 @@ module.exports = {
     body.password = hashSync(body.password, salt);
     create(body, (err, results) => {
       if (err) {
+
         console.log(err);
         return res.status(500).json({
           success: 0,
-          message: "Database connection errror"
+          message: "Database connection errror",
+          details: err.sqlMessage
         });
       }
+
       return res.status(200).json({
         success: 1,
         data: results
-      });
+      })
+
     });
   },
   login: (req, res) => {
@@ -40,26 +48,131 @@ module.exports = {
           data: "Invalid email or password"
         });
       }
-      const result = compareSync(body.password, results.password);
-      if (result) {
-        results.password = undefined;
-        const jsontoken = sign({ result: results }, "qwe1234", {
-          expiresIn: "1h"
-        });
-        return res.json({
-          success: 1,
-          message: "login successfully",
-          token: jsontoken
-        });
-      } else {
-        return res.json({
-          success: 0,
-          data: "Invalid email or password"
-        });
+      console.log('**** Token in Db *****')
+      console.log(results.token)
+      console.log('**** Checking if the token still alive *****')
+
+
+      if (results.token != null || results.token != undefined) {
+
+        jwt.verify(results.token, process.env.JWT_KEY, (err, decoded) => {
+          if (err) {
+
+            console.log('** Token expired , Creating new Token**')
+            // console.log('body.password == >' + body.password)
+            // console.log('results.password  == >' + results.password)
+            const result = compareSync(body.password, results.password);
+            if (result) {
+              results.password = undefined;
+              results.token = undefined;
+              const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
+                expiresIn: "1h",
+              });
+
+
+
+              updateTokenInDb(results, jsontoken, (err, result) => {
+                if (err) {
+                  console.log(err);
+                  return;
+                }
+                else {
+                  //console.log(result)
+                  console.log('token updated successfully in db');
+                }
+              })
+
+              return res.json({
+                success: 1,
+                message: "login successfully",
+                token: jsontoken
+              });
+            } else {
+              return res.json({
+                success: 0,
+                data: "Invalid email or password"
+              });
+            }
+          } else {
+
+            let time_remaining = (decoded.exp - Date.now().toString().slice(0, 10))
+            console.log('Token active for ' + time_remaining)
+            if (time_remaining > 0) {
+              console.log('** Token not expired , returining existing token in db**')
+              /***
+               * If noken not expired let the user use the existing token 
+               * return the existing token in the db
+               * ***/
+              const result = compareSync(body.password, results.password);
+
+              if (result) {
+                return res.json({
+                  success: 1,
+                  message: "login successfully",
+                  token: results.token
+                })
+              }
+              else {
+                return res.json({
+                  success: 0,
+                  data: "Invalid email or password"
+                })
+              }
+            }
+
+          }
+        })
       }
+      else {
+        console.log("****First Time Login ****")
+        const result = compareSync(body.password, results.password);
+        if (result) {
+          results.password = undefined;
+          results.token = undefined;
+          const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
+            expiresIn: "1h",
+          });
+
+          /**updating token in Db , when either token does not exist in db or 
+           * the token exist in Db is expired**/
+
+          updateTokenInDb(results, jsontoken, (err, result) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            else {
+              //console.log(result)
+              console.log('token updated successfully in db');
+            }
+          })
+
+          return res.json({
+            success: 1,
+            message: "login successfully",
+            token: jsontoken
+          });
+        } else {
+          return res.json({
+            success: 0,
+            data: "Invalid email or password"
+          });
+        }
+      }
+
     });
   },
   getUserByUserId: (req, res) => {
+    //console.log(req.decoded.result.id)
+
+    if (req.decoded.result.role != 'ADMIN') {
+      return res.json({
+        success: 0,
+        data: req.decoded.result.firstname + 'needs admin privilages to access this resource'
+      })
+    }
+
+
     const id = req.params.id;
     getUserByUserId(id, (err, results) => {
       if (err) {
@@ -80,6 +193,14 @@ module.exports = {
     });
   },
   getUsers: (req, res) => {
+    // console.log(req.decoded.result)
+    if (req.decoded.result.role != 'ADMIN') {
+      return res.json({
+        success: 0,
+        data: req.decoded.result.firstName + ' needs admin privilages to access this resource'
+      })
+    }
+
     getUsers((err, results) => {
       if (err) {
         console.log(err);
@@ -124,5 +245,52 @@ module.exports = {
         message: "user deleted successfully"
       });
     });
+  },
+
+  getMyDetails: (req, res) => {
+    //console.log(req.decoded)
+    //console.log(req.jwt)
+
+
+    getUserByUserId(req.decoded.result.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (!results) {
+        return res.json({
+          success: 0,
+          message: "Record not Found"
+        });
+      }
+      results.password = undefined;
+      return res.json({
+        success: 1,
+        data: results
+      });
+    });
+  },
+
+
+  logout: (req, res) => {
+    // expire the existing token and clear the token in db
+    //console.log(req.decoded)
+    updateTokenInDb(req.decoded.result, null, (err, result) => {
+      console.log(req.decoded.result.id)
+      if (err) {
+        console.log(err);
+        return;
+      }
+      else {
+        //console.log(result)
+        console.log('token deleted from db');
+      }
+      return res.json({
+        success: 1,
+        data: 'Logged out successfully'
+      });
+    })
   }
+
+
 };
