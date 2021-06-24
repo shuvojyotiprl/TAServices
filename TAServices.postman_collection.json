@@ -1,0 +1,240 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TAServices",
+		"_postman_id": "f76cde5d-daf5-addb-f93c-b1354836215e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"description": "",
+			"item": [
+				{
+					"name": "create user",
+					"request": {
+						"url": "http://localhost:3000/api/users/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\":\"arka\",\n\t\"last_name\":\"Nandi\",\n\t\"gender\":\"Male\",\n\t\"email\":\"arka12@gmail.com\",\n\t\"password\":\"arka\",\n\t\"number\":9800221144\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"url": "http://localhost:3000/api/users/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"arka12@gmail.com\",\n\t\"password\":\"arka\"\n\t\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "admin - get all users",
+					"request": {
+						"url": "http://localhost:3000/api/users/all",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM0LCJmaXJzdE5hbWUiOiJ1c2VyIiwibGFzdE5hbWUiOiJCYW5lcmplZSIsImdlbmRlciI6IkZlbWFsZSIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0MTk2NzA0LCJleHAiOjE2MjQyMDAzMDR9.xYLPRfDUmKl9Gh-r_M1raMFuQXJ7CxZFtoMZxyBQBmo",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "admin - get user by id",
+					"request": {
+						"url": "http://localhost:3000/api/users/id/30",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjMyLCJmaXJzdE5hbWUiOiJhaGFuYSIsImxhc3ROYW1lIjoiQmFuZXJqZWUiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6ImFoYW5hQGdtYWlsLmNvbSIsIm51bWJlciI6Ijk4MDAyMjExNDQifSwiaWF0IjoxNjI0MTg1NjUxLCJleHAiOjE2MjQxODkyNTF9.Owb6_bn2ze1U2UK0va3j_42blSmVyuHoVlTzkzah_M4",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "update users",
+					"request": {
+						"url": "http://localhost:3000/api/users/",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjE5LCJmaXJzdE5hbWUiOiJBaGFuYSIsImxhc3ROYW1lIjoiQmFuZXJqZWUiLCJnZW5kZXIiOiJNYWxlIiwiZW1haWwiOiJhaG9AZ21haWwuY29tIiwibnVtYmVyIjoiOTgwMDIyMTE0NCJ9LCJpYXQiOjE2MjQwMjAxMDYsImV4cCI6MTYyNDAyMzcwNn0.rw7C5VAhYXY1f_La0jIwys0RxsjUqfctRRQYR2DAiqw",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \t\"first_name\":\"Ahana\",\n\t\"last_name\":\"Banerjee\",\n\t\"gender\":\"Male\",\n\t\"email\":\"aho@gmail.com\",\n\t\"password\":\"233\",\n\t\"number\":9800221188\n    }"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get my details",
+					"request": {
+						"url": "http://localhost:3000/api/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM2LCJmaXJzdE5hbWUiOiJhcmthIiwibGFzdE5hbWUiOiJOYW5kaSIsImdlbmRlciI6Ik1hbGUiLCJlbWFpbCI6ImFya2ExMkBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0NTE4NDk3LCJleHAiOjE2MjQ1MjIwOTd9.LB0fP1cIglWAsA94EWlQtsNbXeyDOCyK76pt-kqVhiE",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "log out",
+					"request": {
+						"url": "http://localhost:3000/api/users/logout",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM1LCJmaXJzdE5hbWUiOiJhc2hpbSIsImxhc3ROYW1lIjoibWFqdW1kZXIiLCJnZW5kZXIiOiJNYWxlIiwiZW1haWwiOiJhc2hpbW1hanVtZGVyNTdAZ21haWwuY29tIiwibnVtYmVyIjoiOTgwMDIyMTE0NCIsInJvbGUiOiJVU0VSIn0sImlhdCI6MTYyNDM1NTg1OCwiZXhwIjoxNjI0MzU5NDU4fQ.LXH32p2ZwjHgnjgYZyFFMKu0nlwlADIHs8UJ7dfE3TU",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tasks",
+			"description": "",
+			"item": [
+				{
+					"name": "create new task",
+					"request": {
+						"url": "http://localhost:3000/api/tasks/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM2LCJmaXJzdE5hbWUiOiJhcmthIiwibGFzdE5hbWUiOiJOYW5kaSIsImdlbmRlciI6Ik1hbGUiLCJlbWFpbCI6ImFya2ExMkBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0NTE4NDk3LCJleHAiOjE2MjQ1MjIwOTd9.LB0fP1cIglWAsA94EWlQtsNbXeyDOCyK76pt-kqVhiE",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"taskname\":\"Cooking\",\n\t\"description\":\"Sweet chicken\",\n\t\"priority\":\"HIGH\",\n\t\"targated\":\"2021-06-25 09:35:00\",\n\t\"type\":\"PERSONAL\"\n\t\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find task by id",
+					"request": {
+						"url": "http://localhost:3000/api/tasks/7",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM2LCJmaXJzdE5hbWUiOiJhcmthIiwibGFzdE5hbWUiOiJOYW5kaSIsImdlbmRlciI6Ik1hbGUiLCJlbWFpbCI6ImFya2ExMkBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0NTE4NDk3LCJleHAiOjE2MjQ1MjIwOTd9.LB0fP1cIglWAsA94EWlQtsNbXeyDOCyK76pt-kqVhiE",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "fetch all tasks",
+					"request": {
+						"url": "http://localhost:3000/api/tasks",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM2LCJmaXJzdE5hbWUiOiJhcmthIiwibGFzdE5hbWUiOiJOYW5kaSIsImdlbmRlciI6Ik1hbGUiLCJlbWFpbCI6ImFya2ExMkBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0NTE4NDk3LCJleHAiOjE2MjQ1MjIwOTd9.LB0fP1cIglWAsA94EWlQtsNbXeyDOCyK76pt-kqVhiE",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "update task",
+					"request": {
+						"url": "http://localhost:3000/api/tasks/7",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXN1bHQiOnsiaWQiOjM2LCJmaXJzdE5hbWUiOiJhcmthIiwibGFzdE5hbWUiOiJOYW5kaSIsImdlbmRlciI6Ik1hbGUiLCJlbWFpbCI6ImFya2ExMkBnbWFpbC5jb20iLCJudW1iZXIiOiI5ODAwMjIxMTQ0Iiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjI0NTE4NDk3LCJleHAiOjE2MjQ1MjIwOTd9.LB0fP1cIglWAsA94EWlQtsNbXeyDOCyK76pt-kqVhiE",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"status\": \"COMPLETED\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

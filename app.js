@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const express = require("express");
 const app = express();
 const userRouter = require("./api/users/user.router");
+const taskRouter = require("./api/tasks/tasks.router")
 
 const bodyparser = require("body-parser");
 
@@ -15,7 +16,10 @@ app.use(
     })
 ); 
 app.use(morgan('dev'))
+
 app.use("/api/users", userRouter);
+app.use("/api/tasks", taskRouter);
+
 const port = process.env.APP_PORT || 4000;
 app.listen(port, () => {
   console.log("server up and running on PORT :", port);
