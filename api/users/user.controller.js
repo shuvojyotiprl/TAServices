@@ -212,6 +212,16 @@ module.exports = {
       });
     });
   },
+
+  testUser: (req, res) => {
+    // console.log(req.decoded.result)
+   
+    return res.json({
+      success: 1,
+      data: 'success'
+    })
+  },
+
   updateUsers: (req, res) => {
     const body = req.body;
     const salt = genSaltSync(10);

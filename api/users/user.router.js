@@ -8,7 +8,8 @@ const {
   updateUsers,
   deleteUser,
   getMyDetails,
-  logout
+  logout,
+  testUser
 } = require("./user.controller");
 
 
@@ -20,6 +21,9 @@ router.patch("/", checkToken, updateUsers);
 router.delete("/", checkToken, deleteUser);
 router.get("/", checkToken, getMyDetails); 
 router.post("/logout",checkToken,logout)
+
+/*Testing endpoint*/
+router.get("/test",testUser)
 
 
 
