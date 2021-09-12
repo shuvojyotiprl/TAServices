@@ -6,6 +6,8 @@ const {
 } = require("./tasks.service");
 
 
+const logger = require("./../log/logger")
+
 module.exports = {
   createNewTask: (req, res) => {
 
@@ -15,7 +17,7 @@ module.exports = {
     createTask(user, task, (err, results) => {
       if (err) {
 
-        console.log(err);
+        logger.info(err);
         return res.status(500).json({
           success: 0,
           message: "Database errror",
@@ -36,12 +38,13 @@ module.exports = {
     const user = req.decoded.result;
     const taskid = req.params.id;
 
-    console.log('Task Id =>' + taskid)
+    logger.info('Task Id =>' + taskid)
+   
 
     getTaskbyId(user, taskid, (err, results) => {
       if (err) {
 
-        console.log(err);
+        logger.info(err);
         return res.status(500).json({
           success: 0,
           message: "Database errror",
@@ -66,7 +69,7 @@ module.exports = {
     getAllTasks(user, (err, results) => {
       if (err) {
 
-        console.log(err);
+        logger.info(err);
         return res.status(500).json({
           success: 0,
           message: "Database errror",
@@ -92,7 +95,7 @@ module.exports = {
     const updates = Object.keys(req.body)
 
     const isValidOperation = updates.every((update) => {
-      //console.log(update)
+      //logger.info(update)
       return TaskAllowedUpdates.includes(update)
     })
 
@@ -103,7 +106,7 @@ module.exports = {
     getTaskbyId(user, taskid, (err, existingtask) => {
       if (err) {
 
-        console.log(err);
+        logger.info(err);
         return res.status(500).json({
           success: 0,
           message: "Database errror",
@@ -117,14 +120,14 @@ module.exports = {
           message: "task not found in db"
         });
       }
-      console.log('****OLD TASK***')
-      console.log(existingtask)
-      console.log('****NEW TASK***')
-      console.log(taskupdate)
+      logger.info('****OLD TASK***')
+      logger.info(existingtask)
+      logger.info('****NEW TASK***')
+      logger.info(taskupdate)
       updatetask(user, taskupdate, existingtask, (err, results) => {
         if (err) {
 
-          console.log(err);
+          logger.info(err);
           return res.status(500).json({
             success: 0,
             message: "Database errror",

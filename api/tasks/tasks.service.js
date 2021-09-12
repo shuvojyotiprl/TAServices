@@ -1,5 +1,7 @@
 const pool = require("../../config/database");
 
+const logger = require("./../log/logger")
+
 module.exports = {
   createTask: (user, task, callBack) => {
 
@@ -95,8 +97,8 @@ module.exports = {
       oldtask.type = newtask.type
 
 
-      console.log('**** After update *****')
-      console.log(oldtask)
+      logger.info('**** After update *****')
+      logger.info(oldtask)
 
 
       pool.query(

@@ -12,6 +12,8 @@ const { sign } = require("jsonwebtoken");
 
 const jwt = require("jsonwebtoken");
 
+const logger = require("./../log/logger")
+
 
 module.exports = {
   createUser: (req, res) => {
@@ -21,7 +23,7 @@ module.exports = {
     create(body, (err, results) => {
       if (err) {
 
-        console.log(err);
+        logger.info(err);
         return res.status(500).json({
           success: 0,
           message: "Database connection errror",
@@ -40,7 +42,7 @@ module.exports = {
     const body = req.body;
     getUserByUserEmail(body.email, (err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
       }
       if (!results) {
         return res.json({
@@ -48,9 +50,9 @@ module.exports = {
           data: "Invalid email or password"
         });
       }
-      console.log('**** Token in Db *****')
-      console.log(results.token)
-      console.log('**** Checking if the token still alive *****')
+      logger.info('**** Token in Db *****')
+      logger.info(results.token)
+      logger.info('**** Checking if the token still alive *****')
 
 
       if (results.token != null || results.token != undefined) {
@@ -58,9 +60,9 @@ module.exports = {
         jwt.verify(results.token, process.env.JWT_KEY, (err, decoded) => {
           if (err) {
 
-            console.log('** Token expired , Creating new Token**')
-            // console.log('body.password == >' + body.password)
-            // console.log('results.password  == >' + results.password)
+            logger.info('** Token expired , Creating new Token**')
+            // logger.info('body.password == >' + body.password)
+            // logger.info('results.password  == >' + results.password)
             const result = compareSync(body.password, results.password);
             if (result) {
               results.password = undefined;
@@ -73,12 +75,12 @@ module.exports = {
 
               updateTokenInDb(results, jsontoken, (err, result) => {
                 if (err) {
-                  console.log(err);
+                  logger.info(err);
                   return;
                 }
                 else {
-                  //console.log(result)
-                  console.log('token updated successfully in db');
+                  //logger.info(result)
+                  logger.info('token updated successfully in db');
                 }
               })
 
@@ -96,9 +98,9 @@ module.exports = {
           } else {
 
             let time_remaining = (decoded.exp - Date.now().toString().slice(0, 10))
-            console.log('Token active for ' + time_remaining)
+            logger.info('Token active for ' + time_remaining)
             if (time_remaining > 0) {
-              console.log('** Token not expired , returining existing token in db**')
+              logger.info('** Token not expired , returining existing token in db**')
               /***
                * If noken not expired let the user use the existing token 
                * return the existing token in the db
@@ -124,7 +126,7 @@ module.exports = {
         })
       }
       else {
-        console.log("****First Time Login ****")
+        logger.info("****First Time Login ****")
         const result = compareSync(body.password, results.password);
         if (result) {
           results.password = undefined;
@@ -138,12 +140,12 @@ module.exports = {
 
           updateTokenInDb(results, jsontoken, (err, result) => {
             if (err) {
-              console.log(err);
+              logger.info(err);
               return;
             }
             else {
-              //console.log(result)
-              console.log('token updated successfully in db');
+              //logger.info(result)
+              logger.info('token updated successfully in db');
             }
           })
 
@@ -163,7 +165,7 @@ module.exports = {
     });
   },
   getUserByUserId: (req, res) => {
-    //console.log(req.decoded.result.id)
+    //logger.info(req.decoded.result.id)
 
     if (req.decoded.result.role != 'ADMIN') {
       return res.json({
@@ -176,7 +178,7 @@ module.exports = {
     const id = req.params.id;
     getUserByUserId(id, (err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       if (!results) {
@@ -193,7 +195,7 @@ module.exports = {
     });
   },
   getUsers: (req, res) => {
-    // console.log(req.decoded.result)
+    // logger.info(req.decoded.result)
     if (req.decoded.result.role != 'ADMIN') {
       return res.json({
         success: 0,
@@ -203,7 +205,7 @@ module.exports = {
 
     getUsers((err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       return res.json({
@@ -214,7 +216,7 @@ module.exports = {
   },
 
   testUser: (req, res) => {
-    // console.log(req.decoded.result)
+    // logger.info(req.decoded.result)
    
     return res.json({
       success: 1,
@@ -228,7 +230,7 @@ module.exports = {
     body.password = hashSync(body.password, salt);
     updateUser(body, (err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       return res.json({
@@ -241,7 +243,7 @@ module.exports = {
     const data = req.body;
     deleteUser(data, (err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       if (!results) {
@@ -258,13 +260,13 @@ module.exports = {
   },
 
   getMyDetails: (req, res) => {
-    //console.log(req.decoded)
-    //console.log(req.jwt)
+    //logger.info(req.decoded)
+    //logger.info(req.jwt)
 
 
     getUserByUserId(req.decoded.result.id, (err, results) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       if (!results) {
@@ -284,16 +286,16 @@ module.exports = {
 
   logout: (req, res) => {
     // expire the existing token and clear the token in db
-    //console.log(req.decoded)
+    //logger.info(req.decoded)
     updateTokenInDb(req.decoded.result, null, (err, result) => {
-      console.log(req.decoded.result.id)
+      logger.info(req.decoded.result.id)
       if (err) {
-        console.log(err);
+        logger.info(err);
         return;
       }
       else {
-        //console.log(result)
-        console.log('token deleted from db');
+        //logger.info(result)
+        logger.info('token deleted from db');
       }
       return res.json({
         success: 1,

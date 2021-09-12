@@ -1,5 +1,7 @@
 const pool = require("../../config/database");
 
+const logger = require("./../log/logger")
+
 module.exports = {
   create: (data, callBack) => {
     pool.query(
@@ -104,7 +106,7 @@ module.exports = {
         if (error) {
           callBack(error);
         }
-        //console.log(results)
+        //logger.info(results)
         return callBack(null, results);
       }
     );
@@ -122,7 +124,7 @@ module.exports = {
         if (error) {
           callBack(error);
         }
-        //console.log(results)
+        //logger.info(results)
         return callBack(null, results);
       }
     );
