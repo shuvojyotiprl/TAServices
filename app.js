@@ -4,6 +4,8 @@ const express = require("express");
 const app = express();
 const userRouter = require("./api/users/user.router");
 const taskRouter = require("./api/tasks/tasks.router")
+const skillRouter = require("./api/skills/skills.router")
+const nominationRouter = require("./api/nomination/nomination.router")
 
 
 const logger = require("./api/log/logger")
@@ -22,6 +24,8 @@ app.use(morgan('dev'))
 
 app.use("/api/users", userRouter);
 app.use("/api/tasks", taskRouter);
+app.use("/api/skills",skillRouter)
+app.use("/api/nomination",nominationRouter)
 
 const port = process.env.APP_PORT || 4000;
 app.listen(port, () => {

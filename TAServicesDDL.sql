@@ -1,4 +1,4 @@
-create table if not exists tasks_dev.registration
+create table if not exists taskdb_dev.registration
 (
 	id int auto_increment
 		primary key,
@@ -14,7 +14,7 @@ create table if not exists tasks_dev.registration
 		unique (email)
 );
 
-create table tasks_dev.tasks
+create table taskdb_dev.tasks
 (
 	taskid int auto_increment
 		primary key,
@@ -27,9 +27,34 @@ create table tasks_dev.tasks
 	status enum('COMPLETED', 'IN_PROGRESS', 'DUE', 'OVERDUE', 'DISCARDED') not null,
 	type enum('PERSONAL', 'PROFESSIONAL', 'OTHER') null,
 	constraint tasks_ibfk_1
-		foreign key (userid) references tasks_dev.registration (id)
+		foreign key (userid) references taskdb_dev.registration (id)
 );
 
-create index userid
-	on tasks_dev.tasks (userid);
 
+create index userid
+	on taskdb_dev.tasks (userid);
+
+create table taskdb_dev.skills
+(
+	skill_id int auto_increment
+		primary key,
+	skill_name varchar(255) not null,
+	training_cost float not null,
+	duration int not null
+);
+
+create table taskdb_dev.nomination
+(
+	skill_id int not null,
+	user_id int not null,
+	nomination_date datetime ,
+	completion_date datetime ,
+	percentile float ,
+	status enum('IN_PROGRESS', 'PASSED', 'FAILED') null,
+	primary key(skill_id,user_id),
+	constraint nomination_skills_1
+		foreign key (skill_id) references taskdb_dev.skills (skill_id),
+		constraint nomination_registration_1
+		foreign key (user_id) references taskdb_dev.registration (id)
+
+);
